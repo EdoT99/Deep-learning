@@ -2,6 +2,13 @@ import torch
 import matplotlib.pyplot as plt
 import numpy as np
 
+import os
+import zipfile
+
+from pathlib import Path
+
+import requests
+
 #----plotting loss-functions------
 
 def plot_losses(loss_values_train,loss_values_test,epochs_count):
@@ -22,4 +29,5 @@ def plot_losses(loss_values_train,loss_values_test,epochs_count):
 def accuracy_fn(y_true,y_pred):
   correct = torch.eq(y_true,y_pred).sum().item()
   acc = (correct/len(y_pred))*100
+  
   return acc
