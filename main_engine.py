@@ -24,7 +24,8 @@ def train_loop(model: torch.nn.Module,
     y_logits = model(x)
     loss = loss_fn(y_logits, y)
     loss_train += loss
-    train_acc += accuracy_fn(y_true=y,y_pred=y_logits.argmax(dim=1))
+    predictions = (y_logits > 0.5).float
+    train_acc += accuracy_fn(y_true=y,y_pred=predictions)
 
     optimizer.zero_grad()
     loss.backward()
@@ -46,6 +47,7 @@ def test_loop(model: torch.nn.Module,
   '''
   Tests and prints a model's loss and accuracy on a testing dataset
   '''
+  all_labels, all_outputs = [],[]
   model.to(device)
   model.eval()
 
@@ -53,10 +55,17 @@ def test_loop(model: torch.nn.Module,
     test_loss, test_acc = 0,0
     for batch, (x, y) in enumerate(test_dataloader):
       X,Y = x.to(device), y.to(device)
+      
       test_pred = model(x)
       test_loss += loss_fn(test_pred, y)
-      test_acc += accuracy_fn(y_true=y,y_pred=test_pred.argmax(dim=1))
+      predictions = (test_pred > 0.5).float()
+      test_acc += accuracy_fn(y_true=y,y_pred=predictions)
 
+
+      #store labels and predictions for later metrics calculation
+      all_outputs.extend(Y.to(device).numpy())
+      all_labels.extend(predictions.to(device).numpy())
+      
     test_loss /= len(test_dataloader)
     test_acc /= len(test_dataloader)
     print(f'Test loss: {test_loss} | Test accuracy: {test_acc}')
