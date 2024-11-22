@@ -9,6 +9,23 @@ from pathlib import Path
 
 import requests
 
+
+
+#----plotting thre-color channel image-----
+
+def image_draw(image,label,class_names):
+    plt.figure(figsize=(6, 6))
+    if len(image.shape) == 2 or (len(image.shape) == 3 and image.shape[2] == 1):
+        cmap = 'gray'
+        image = image.squeeze()  # Remove singleton dimensions if necessary
+    else:
+        cmap = None
+    plt.imshow(image.squeeze(),cmap="gray")
+    plt.colorbar()
+    plt.grid(False)
+    plt.title(f'Label: {class_names[label]}')
+    plt.show()
+
 #----plotting loss-functions------
 
 def plot_losses(loss_values_train,loss_values_test,epochs_count):
