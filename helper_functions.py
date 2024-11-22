@@ -11,7 +11,7 @@ import requests
 
 
 
-#----plotting thre-color channel image-----
+#----plotting three or gray color channel image-----
 
 def image_draw(image,label,class_names):
     plt.figure(figsize=(6, 6))
@@ -20,7 +20,7 @@ def image_draw(image,label,class_names):
         image = image.squeeze()  # Remove singleton dimensions if necessary
     else:
         cmap = None
-    plt.imshow(image.squeeze(),cmap="gray")
+    plt.imshow(image.squeeze(),cmap=cmap)
     plt.colorbar()
     plt.grid(False)
     plt.title(f'Label: {class_names[label]}')
